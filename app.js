@@ -1,7 +1,7 @@
 import "./styles.css";
 import { useEffect, useState } from "react";
 import { app, database } from "./firebaseConfig.js";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 export default function App() {
   const [data, setData] = useState({});
@@ -24,6 +24,16 @@ export default function App() {
         alert(err.message);
       });
   };
+
+  const getData = () => {
+    getDocs(collectionRef).then((response) => {
+      console.log(
+        response.docs.map((item) => {
+          return item.data();
+        })
+      );
+    });
+  };
   return (
     <div className="App">
       <input
@@ -42,7 +52,8 @@ export default function App() {
         onChange={(e) => handleInputs(e)}
       />
 
-      <button onClick={handleSubmit}>Submit</button>
+      <button onClick={getData}>Submit</button>
+      {/* <button onClick={handleSubmit}>Submit</button> */}
     </div>
   );
 }
