@@ -1,14 +1,11 @@
 import "./styles.css";
 import { useEffect, useState } from "react";
-import { app } from "./firebaseConfig.js";
-// import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-// import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { app, database } from "./firebaseConfig.js";
+import { collection, addDoc } from "firebase/firestore";
 
 export default function App() {
-  let auth = getAuth();
-  let google = new GoogleAuthProvider();
   const [data, setData] = useState({});
+  const collectionRef = collection(database, "users");
 
   const handleInputs = (e) => {
     let inputs = { [e.target.name]: e.target.value };
@@ -16,12 +13,12 @@ export default function App() {
   };
 
   const handleSubmit = () => {
-    // createUserWithEmailAndPassword(auth, data.email, data.password)
-    signInWithPopup(auth, google)
-      // signInWithEmailAndPassword(auth, data.email, data.password)
-
-      .then((response) => {
-        console.log(response.user);
+    addDoc(collectionRef, {
+      email: data.email,
+      password: data.password
+    })
+      .then(() => {
+        alert("data added");
       })
       .catch((err) => {
         alert(err.message);
